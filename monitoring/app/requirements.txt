@@ -1,0 +1,6 @@
+fastapi[standard]
+joblib
+pandas
+prometheus-fastapi-instrumentator
+sqlmodel
+scikit-learn

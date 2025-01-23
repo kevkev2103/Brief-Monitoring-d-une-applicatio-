@@ -1,12 +1,13 @@
 from fastapi import FastAPI, HTTPException
+from prometheus_fastapi_instrumentator import Instrumentator
 import joblib
 import pandas as pd
 from pydantic import BaseModel
 
 #chargement du modele
-pipeline = joblib.load("pipeline.pkl")
-model = joblib.load("model.pkl")
-target_encoder = joblib.load("target_encoder.pkl")
+pipeline = joblib.load("pipeline.joblib")
+#model = joblib.load("model.pkl")
+
 
 #initialisation de l'application FastAPI
 
@@ -35,7 +36,7 @@ class_mapping = {
 async def predict(data:InputData):
 
     #convertir les données d'entrée en Dataframe
-    input_data = pd.DataFrame([data.dict()])
+    input_data = pd.DataFrame([data.model_dump()])
 
     #etape 1: transformer les données avec le pipeline
     try:
@@ -46,6 +47,7 @@ async def predict(data:InputData):
     #étape 2 : Faire une prédiction avec le modèle
     try:
         prediction_encoded = model.predict(transformed_data)[0]
+        
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur lors de la prédiction : {e}")
@@ -57,3 +59,4 @@ async def predict(data:InputData):
     return {"prediction": prediction}
 
 
+Instrumentator().instrument(app).expose(app)

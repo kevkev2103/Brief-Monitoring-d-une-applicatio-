@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s  # Intervalle pour collecter les métriques
+scrape_configs:
+  - job_name: 'fastapi'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["api:8000"]  # Adresse de ton API
+
