@@ -3,10 +3,16 @@ from prometheus_fastapi_instrumentator import Instrumentator
 import joblib
 import pandas as pd
 from pydantic import BaseModel
+import os
 
-#chargement du modele
-pipeline = joblib.load("pipeline.joblib")
-#model = joblib.load("model.pkl")
+# Obtenir les chemins absolus des fichiers
+current_dir = os.path.dirname(os.path.abspath(__file__))
+pipeline_path = os.path.join(current_dir, "pipeline.joblib")
+model_path = os.path.join(current_dir, "model.joblib")
+
+# Charger le pipeline et le modèle
+pipeline = joblib.load(pipeline_path)
+model = joblib.load(model_path)
 
 
 #initialisation de l'application FastAPI

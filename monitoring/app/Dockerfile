@@ -5,8 +5,8 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copie les fichiers nécessaires
-
 COPY . /app/
+COPY pipeline.joblib /app/pipeline.joblib
 
 # Installe les dépendances Python
 RUN pip install --upgrade pip && \

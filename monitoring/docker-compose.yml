@@ -5,7 +5,7 @@ services:
     build:
       context: ./app  # Utiliser le dossier monitoring comme contexte
     ports:
-      - "8000:8000"  # API accessible sur localhost:8000
+      - "8000:8000"  # Port externe:Port interne
     volumes:
       - ./app:/app  # Monte le code local dans le conteneur
 
@@ -29,6 +29,22 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning
     env_file:
       - ./grafana/config.monitoring
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
 
 
 
